@@ -1,0 +1,76 @@
+/* Add these styles to your existing bingo game CSS */
+.video-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: rgba(0,0,0,0.8);
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.video-container video {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.broadcast-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,215,0,0.95);
+    color: #333;
+    padding: 15px 25px;
+    border-radius: 10px;
+    z-index: 2000;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translate(-50%, -100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+.user-list {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(13,71,161,0.95);
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.user-item {
+    padding: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-item button {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.user-item button:hover {
+    background: #218838;
+}

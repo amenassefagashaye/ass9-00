@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Assefa Digital Bingo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .auth-container {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .admin-container {
+            display: none;
+            padding: 30px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .logo span {
+            color: #667eea;
+        }
+        
+        .auth-form {
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .admin-header h2 {
+            color: #333;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .control-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .control-panel h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .control-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .control-btn {
+            padding: 12px;
+            background: white;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .control-btn:hover {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .live-data {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .live-data h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        #connectedUsers {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .user-item {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-online {
+            background: #28a745;
+        }
+        
+        .status-offline {
+            background: #dc3545;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .logout-btn {
+            padding: 8px 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .auth-container, .admin-container {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Authentication Container -->
+        <div class="auth-container" id="authContainer">
+            <div class="logo">
+                <h1>Assefa Digital <span>Bingo</span></h1>
+                <p>Admin Dashboard</p>
+            </div>
+            
+            <div class="auth-form">
+                <div class="form-group">
+                    <label for="adminPassword">Admin Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter admin password">
+                </div>
+                
+                <button class="btn" onclick="authenticate()">Login</button>
+                
+                <div class="error-message" id="errorMessage">
+                    Invalid password. Please try again.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Dashboard Container -->
+        <div class="admin-container" id="adminContainer">
+            <div class="admin-header">
+                <h2>Admin Dashboard</h2>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <div class="value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Games</h3>
+                    <div class="value" id="activeGames">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Revenue</h3>
+                    <div class="value" id="totalRevenue">0 ETB</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Server Status</h3>
+                    <div class="value" id="serverStatus">Online</div>
+                </div>
+            </div>
+            
+            <div class="control-panel">
+                <h3>Game Controls</h3>
+                <div class="control-buttons">
+                    <button class="control-btn" onclick="sendAdminCommand('start_game')">Start New Game</button>
+                    <button class="control-btn" onclick="sendAdminCommand('pause_game')">Pause Game</button>
+                    <button class="control-btn" onclick="sendAdminCommand('reset_game')">Reset Game</button>
+                    <button class="control-btn" onclick="sendAdminCommand('announce_winner')">Announce Winner</button>
+                    <button class="control-btn" onclick="sendAdminCommand('broadcast_message')">Broadcast Message</button>
+                    <button class="control-btn" onclick="sendAdminCommand('update_prize_pool')">Update Prize Pool</button>
+                </div>
+            </div>
+            
+            <div class="live-data">
+                <h3>Connected Users</h3>
+                <div id="connectedUsers">
+                    <!-- Users will be listed here -->
+                    <div class="user-item">
+                        <span>No users connected</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let isAuthenticated = false;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
+        const CORRECT_PASSWORD = "we17me78";
+
+        // Initialize WebSocket connection
+        function initWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws`;
+            
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = function() {
+                console.log('WebSocket connected');
+                reconnectAttempts = 0;
+                
+                // If we were previously authenticated, re-authenticate
+                if (isAuthenticated) {
+                    reauthenticate();
+                }
+            };
+            
+            ws.onmessage = function(event) {
+                handleMessage(JSON.parse(event.data));
+            };
+            
+            ws.onclose = function() {
+                console.log('WebSocket disconnected');
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+                    setTimeout(initWebSocket, 1000 * reconnectAttempts);
+                }
+            };
+            
+            ws.onerror = function(error) {
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        // Handle incoming messages
+        function handleMessage(data) {
+            console.log('Received:', data);
+            
+            switch(data.type) {
+                case 'auth_response':
+                    if (data.success) {
+                        isAuthenticated = true;
+                        document.getElementById('authContainer').style.display = 'none';
+                        document.getElementById('adminContainer').style.display = 'block';
+                        loadDashboardData();
+                    } else {
+                        showError();
+                    }
+                    break;
+                    
+                case 'stats_update':
+                    updateDashboard(data.data);
+                    break;
+                    
+                case 'users_list':
+                    updateUsersList(data.users);
+                    break;
+                    
+                case 'command_response':
+                    alert(data.message);
+                    break;
+                    
+                case 'broadcast':
+                    showNotification(data.message);
+                    break;
+            }
+        }
+
+        // Authenticate user
+        function authenticate() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === CORRECT_PASSWORD) {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    sendAuthRequest();
+                } else {
+                    showError();
+                }
+            } else {
+                showError();
+            }
+        }
+
+        // Send authentication request
+        function sendAuthRequest() {
+            const message = {
+                type: 'admin_auth',
+                password: CORRECT_PASSWORD,
+                timestamp: Date.now()
+            };
+            ws.send(JSON.stringify(message));
+        }
+
+        // Re-authenticate after reconnection
+        function reauthenticate() {
+            sendAuthRequest();
+        }
+
+        // Load dashboard data
+        function loadDashboardData() {
+            const message = {
+                type: 'get_stats',
+                timestamp: Date.now()
+            };
+            ws.send(JSON.stringify(message));
+        }
+
+        // Update dashboard with stats
+        function updateDashboard(stats) {
+            document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+            document.getElementById('activeGames').textContent = stats.activeGames || 0;
+            document.getElementById('totalRevenue').textContent = `${stats.totalRevenue || 0} ETB`;
+            document.getElementById('serverStatus').textContent = stats.serverStatus || 'Online';
+        }
+
+        // Update users list
+        function updateUsersList(users) {
+            const container = document.getElementById('connectedUsers');
+            
+            if (users.length === 0) {
+                container.innerHTML = '<div class="user-item"><span>No users connected</span></div>';
+                return;
+            }
+            
+            container.innerHTML = users.map(user => `
+                <div class="user-item">
+                    <div>
+                        <span class="status-indicator ${user.status === 'online' ? 'status-online' : 'status-offline'}"></span>
+                        <strong>${user.username || 'Anonymous'}</strong>
+                    </div>
+                    <div>
+                        <small>${user.ip}</small>
+                        <span style="margin-left: 10px; color: #666;">ID: ${user.id.substring(0, 8)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Send admin command
+        function sendAdminCommand(command) {
+            if (!isAuthenticated) {
+                alert('Please login first');
+                return;
+            }
+            
+            const message = {
+                type: 'admin_command',
+                command: command,
+                timestamp: Date.now(),
+                data: {}
+            };
+            
+            // Add additional data for specific commands
+            if (command === 'broadcast_message') {
+                const messageText = prompt('Enter broadcast message:');
+                if (!messageText) return;
+                message.data.message = messageText;
+            } else if (command === 'update_prize_pool') {
+                const amount = prompt('Enter new prize pool amount:');
+                if (!amount) return;
+                message.data.amount = parseInt(amount);
+            }
+            
+            ws.send(JSON.stringify(message));
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 15px;
+                border-radius: 8px;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        // Show error message
+        function showError() {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.style.display = 'block';
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // Logout
+        function logout() {
+            isAuthenticated = false;
+            document.getElementById('adminContainer').style.display = 'none';
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('adminPassword').value = '';
+            
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initWebSocket();
+            
+            // Auto-focus password input
+            document.getElementById('adminPassword').focus();
+            
+            // Allow Enter key to submit
+            document.getElementById('adminPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    authenticate();
+                }
+            });
+        });
+
+        // Handle page visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && !isAuthenticated) {
+                document.getElementById('adminPassword').focus();
+            }
+        });
+    </script>
+</body>
+</html>
